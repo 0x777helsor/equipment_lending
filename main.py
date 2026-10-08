@@ -1,9 +1,9 @@
 from colors import (
     RESET,
     GREEN,
+    RED,
     YELLOW,
     BLUE,
-    MAGENTA,
     CYAN,
     BOLD
 )
@@ -29,11 +29,11 @@ def get_positive_integer(prompt):
         try:
             value = int(value)
         except ValueError:
-            print("Please enter a whole number.")
+            print(RED + "Please enter a whole number." + RESET)
             continue
 
         if value <= 0:
-            print("Please enter a number greater than 0.")
+            print(RED + "Please enter a number greater than 0." + RESET)
             continue
 
         return value
@@ -41,21 +41,23 @@ def get_positive_integer(prompt):
 
 def display_resources(resources):
     if not resources:
-        print("No resources found.")
+        print(YELLOW + "No resources found." + RESET)
         return
 
     for resource in resources:
         print(
-            f"{resource['id']} | "
-            f"{resource['name']} | "
-            f"{resource['category']} | "
-            f"Total: {resource['total']} | "
-            f"Available: {resource['available']}"
+            BLUE
+            + f"{resource['id']} | "
+            + f"{resource['name']} | "
+            + f"{resource['category']} | "
+            + f"Total: {resource['total']} | "
+            + f"Available: {resource['available']}"
+            + RESET
         )
 
 
 def handle_add_resource():
-    print("\n--- Add Resource ---")
+    print(CYAN + "\n--- Add Resource ---" + RESET)
 
     resource_id = input("Resource ID: ")
     name = input("Resource name: ")
@@ -69,16 +71,20 @@ def handle_add_resource():
         total
     )
 
-    print(message)
+    if success:
+        print(GREEN + message + RESET)
+    else:
+        print(RED + message + RESET)
 
 
 def handle_list_resources():
-    print("\n--- Resources ---")
+    print(CYAN + "\n--- Resources ---" + RESET)
+
     display_resources(list_resources())
 
 
 def handle_search():
-    print("\n--- Search Resources ---")
+    print(CYAN + "\n--- Search Resources ---" + RESET)
 
     name = input("Enter name to search: ")
 
@@ -88,7 +94,7 @@ def handle_search():
 
 
 def handle_filter():
-    print("\n--- Filter Resources ---")
+    print(CYAN + "\n--- Filter Resources ---" + RESET)
 
     category = input("Enter category: ")
 
@@ -98,7 +104,7 @@ def handle_filter():
 
 
 def handle_borrow():
-    print("\n--- Borrow Resource ---")
+    print(CYAN + "\n--- Borrow Resource ---" + RESET)
 
     fellow_id = input("Fellow ID: ")
     resource_id = input("Resource ID: ")
@@ -110,11 +116,14 @@ def handle_borrow():
         quantity
     )
 
-    print(message)
+    if success:
+        print(GREEN + message + RESET)
+    else:
+        print(RED + message + RESET)
 
 
 def handle_return():
-    print("\n--- Return Resource ---")
+    print(CYAN + "\n--- Return Resource ---" + RESET)
 
     fellow_id = input("Fellow ID: ")
     resource_id = input("Resource ID: ")
@@ -126,36 +135,59 @@ def handle_return():
         quantity
     )
 
-    print(message)
+    if success:
+        print(GREEN + message + RESET)
+    else:
+        print(RED + message + RESET)
 
 
 def handle_report():
-    print("\n--- Report ---")
+    print(CYAN + "\n--- Report ---" + RESET)
 
     report = generate_report()
 
-    print(f"Total units: {report['total_units']}")
-    print(f"Available units: {report['available_units']}")
-    print(f"Currently borrowed: {report['borrowed_units']}")
+    print(
+        BLUE
+        + f"Total units: {report['total_units']}"
+        + RESET
+    )
 
-    print("\nLow stock:")
+    print(
+        BLUE
+        + f"Available units: {report['available_units']}"
+        + RESET
+    )
+
+    print(
+        BLUE
+        + f"Currently borrowed: {report['borrowed_units']}"
+        + RESET
+    )
+
+    print(CYAN + "\nLow stock:" + RESET)
+
     if report["low_stock"]:
         for resource in report["low_stock"]:
             print(
-                f"- {resource['name']}: "
-                f"{resource['available']} available"
+                YELLOW
+                + f"- {resource['name']}: "
+                + f"{resource['available']} available"
+                + RESET
             )
     else:
-        print("None")
+        print(GREEN + "None" + RESET)
 
-    print("\nMost borrowed:")
+    print(CYAN + "\nMost borrowed:" + RESET)
+
     for item in report["most_borrowed"]:
         resource = item["resource"]
         borrowed = item["borrowed"]
 
         print(
-            f"- {resource['name']}: "
-            f"{borrowed} currently borrowed"
+            BLUE
+            + f"- {resource['name']}: "
+            + f"{borrowed} currently borrowed"
+            + RESET
         )
 
 
@@ -179,7 +211,7 @@ def main():
     while True:
         show_menu()
 
-        choice = input(BOLD + BLUE + "Choose an option: " + RESET)
+        choice = input("Choose an option: ")
 
         if choice == "1":
             handle_add_resource()
@@ -203,11 +235,15 @@ def main():
             handle_report()
 
         elif choice == "8":
-            print(BOLD + CYAN + "Goodbye." + RESET)
+            print(GREEN + "Goodbye." + RESET)
             break
 
         else:
-            print("Invalid opion. Please choose 1-8.")
+            print(
+                RED
+                + "Invalid option. Please choose 1-8."
+                + RESET
+            )
 
 
 if __name__ == "__main__":
